@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ethics & Business Ethics Practice Exam</title>
+<style>
+  :root{
+    --pink:#ff6fa5;
+    --pink-dark:#e0498a;
+    --purple:#7c5cff;
+    --lavender:#f3e8ff;
+    --bg1:#fff0f6;
+    --bg2:#f0edff;
+    --green:#1f9d55;
+    --green-bg:#e7f9ee;
+    --red:#d9455f;
+    --red-bg:#fdeaee;
+    --text:#3a2e4a;
+    --card:#ffffff;
+    --shadow: 0 8px 24px rgba(124,92,255,0.12);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--bg1), var(--bg2));
+    color:var(--text);
+    min-height:100vh;
+    padding-bottom:60px;
+  }
+  .app{max-width:900px;margin:0 auto;padding:20px;}
+  header.hero{
+    text-align:center;
+    padding:28px 20px;
+    border-radius:22px;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    color:white;
+    box-shadow: var(--shadow);
+    margin-bottom:22px;
+  }
+  header.hero h1{margin:0 0 6px 0;font-size:1.7rem;}
+  header.hero p{margin:0;opacity:0.95;font-size:1rem;}
+  .heart{display:inline-block;animation:pulse 1.4s infinite;}
+  @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.2);}}
+
+  .tabs{display:flex;gap:10px;margin-bottom:18px;}
+  .tab{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:14px;
+    background:white;
+    color:var(--purple);
+    font-weight:600;
+    cursor:pointer;
+    box-shadow: var(--shadow);
+    font-size:0.95rem;
+    transition:all 0.2s;
+  }
+  .tab.active{background:linear-gradient(135deg, var(--pink), var(--purple));color:white;}
+  .tab:hover{transform:translateY(-2px);}
+
+  .exam-section{display:none;}
+  .exam-section.active{display:block;}
+
+  .exam-header{
+    position:sticky;
+    top:10px;
+    z-index:10;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:white;
+    border-radius:16px;
+    padding:14px 18px;
+    box-shadow:var(--shadow);
+    margin-bottom:18px;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .score-board{font-weight:700;color:var(--pink-dark);font-size:1.1rem;}
+  .progress-text{color:var(--purple);font-weight:600;font-size:0.95rem;}
+
+  .qgroup{margin-bottom:26px;}
+  .qgroup h2{
+    color:var(--purple);
+    border-left:6px solid var(--pink);
+    padding-left:12px;
+    font-size:1.2rem;
+    margin-bottom:14px;
+  }
+
+  .question{
+    background:var(--card);
+    border-radius:16px;
+    padding:16px 18px;
+    margin-bottom:14px;
+    box-shadow:var(--shadow);
+    border:2px solid transparent;
+    transition:border-color 0.2s;
+  }
+  .question.correct{border-color:var(--green);}
+  .question.incorrect{border-color:var(--red);}
+
+  .qtext{font-weight:600;margin-bottom:10px;line-height:1.4;}
+  .qnum{color:var(--pink-dark);margin-right:4px;}
+
+  .blanks{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
+  .blank-input{
+    flex:1 1 200px;
+    padding:9px 12px;
+    border-radius:10px;
+    border:1.5px solid #e3d6f0;
+    font-size:0.95rem;
+    outline:none;
+  }
+  .blank-input:focus{border-color:var(--pink);}
+
+  select.match-select{
+    width:100%;
+    padding:10px 12px;
+    border-radius:10px;
+    border:1.5px solid #e3d6f0;
+    font-size:0.95rem;
+    background:white;
+    margin-bottom:6px;
+  }
+
+  .options{display:flex;flex-direction:column;gap:8px;}
+  .option{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 12px;
+    border-radius:10px;
+    background:#faf7ff;
+    cursor:pointer;
+    transition:background 0.15s;
+  }
+  .option:hover{background:var(--lavender);}
+  .option input{accent-color:var(--pink-dark);width:16px;height:16px;}
+
+  .check-btn{
+    background:linear-gradient(135deg, var(--pink), var(--purple));
+    color:white;
+    border:none;
+    padding:9px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    font-size:0.9rem;
+  }
+  .check-btn:hover{opacity:0.9;}
+
+  .feedback{
+    margin-top:10px;
+    padding:10px 12px;
+    border-radius:10px;
+    font-size:0.9rem;
+    line-height:1.4;
+  }
+  .feedback.correct{background:var(--green-bg);color:var(--green);}
+  .feedback.incorrect{background:var(--red-bg);color:var(--red);}
+  .correct-answer{margin-top:6px;font-weight:600;color:var(--text);opacity:0.85;}
+
+  .controls{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin:30px 0;
+  }
+  .controls button{
+    padding:13px 22px;
+    border:none;
+    border-radius:14px;
+    font-weight:700;
+    cursor:pointer;
+    font-size:0.95rem;
+    box-shadow:var(--shadow);
+    transition:transform 0.15s;
+  }
+  .controls button:hover{transform:translateY(-2px);}
+  #retake-ethics, #retake-biz{background:#fff;color:var(--purple);border:2px solid var(--purple);}
+  #shuffle-ethics, #shuffle-biz{background:#fff;color:var(--pink-dark);border:2px solid var(--pink-dark);}
+  #newexam-ethics, #newexam-biz{background:linear-gradient(135deg, var(--pink), var(--purple));color:white;}
+
+  .summary{
+    text-align:center;
+    background:linear-gradient(135deg, #fff5fa, #f5f0ff);
+    border:2px dashed var(--pink);
+    border-radius:18px;
+    padding:20px;
+    margin-bottom:24px;
+  }
+  .summary.hidden{display:none;}
+  .summary h3{color:var(--pink-dark);margin-top:0;}
+  .summary p{margin:6px 0;font-size:1.05rem;}
+
+  footer{text-align:center;color:var(--purple);opacity:0.7;font-size:0.85rem;margin-top:30px;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="hero">
+    <h1><span class="heart">💗</span> Ethics & Business Ethics Practice Exam <span class="heart">💗</span></h1>
+    <p>Made with love for my baby Wiku — good luck, you've got this! 🌸</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="ethics">Part 1: Ethics Exam</button>
+    <button class="tab" data-tab="biz">Part 2: Business Ethics Exam</button>
+  </div>
+
+  <!-- ETHICS SECTION -->
+  <section id="ethics-section" class="exam-section active">
+    <div class="exam-header">
+      <div class="score-board">Score: <span id="ethics-score">0</span> / <span id="ethics-total">50</span></div>
+      <div class="progress-text"><span id="ethics-progress">0</span> / 50 answered</div>
+    </div>
+
+    <div id="ethics-summary" class="summary hidden"></div>
+
+    <div class="qgroup">
+      <h2>Part I — Enumeration</h2>
+      <div id="ethics-enum-list"></div>
+    </div>
+
+    <div class="qgroup">
+      <h2>Part II — Matching Type</h2>
+      <p style="color:#7c5cff;font-size:0.9rem;margin-top:-8px;">Match each term on the left with its correct definition using the dropdown.</p>
+      <div id="ethics-match-list"></div>
+    </div>
+
+    <div class="qgroup">
+      <h2>Part III — Multiple Choice</h2>
+      <div id="ethics-mc-list"></div>
+    </div>
+
+    <div class="controls">
+      <button id="retake-ethics" onclick="retakeExam('ethics')">🔁 Retake Exam</button>
+      <button id="shuffle-ethics" onclick="shuffleExam('ethics')">🔀 Shuffle Exam</button>
+      <button id="newexam-ethics" onclick="generateNewExam('ethics')">🆕 Generate New Exam</button>
+    </div>
+  </section>
+
+  <!-- BUSINESS ETHICS SECTION -->
+  <section id="biz-section" class="exam-section">
+    <div class="exam-header">
+      <div class="score-board">Score: <span id="biz-score">0</span> / <span id="biz-total">50</span></div>
+      <div class="progress-text"><span id="biz-progress">0</span> / 50 answered</div>
+    </div>
+
+    <div id="biz-summary" class="summary hidden"></div>
+
+    <div class="qgroup">
+      <h2>Business Ethics — Multiple Choice</h2>
+      <div id="biz-mc-list"></div>
+    </div>
+
+    <div class="controls">
+      <button id="retake-biz" onclick="retakeExam('biz')">🔁 Retake Exam</button>
+      <button id="shuffle-biz" onclick="shuffleExam('biz')">🔀 Shuffle Exam</button>
+      <button id="newexam-biz" onclick="generateNewExam('biz')">🆕 Generate New Exam</button>
+    </div>
+  </section>
+
+  <footer>Professional Ethics and Development — Practice Exam Generator 💕</footer>
+</div>
+
+<script>
+/* ============ MOTIVATIONAL MESSAGES ============ */
+const correctMsgs = [
+  "Yes, Wiku! 🎉 That's exactly right, my love!",
+  "Perfect, baby! 💕 You nailed it!",
+  "Correct, Wiku! I'm so proud of you! 🌟",
+  "That's it, love! You're doing amazing! ✨",
+  "Woohoo! 🎊 Right answer, Wiku — you're so smart!",
+  "Yesss! 💪 Another one down, baby!",
+  "Spot on, Wiku! Keep that streak going! 🔥",
+  "You got it, love! I knew you could! 🥰"
+];
+const incorrectMsgs = [
+  "Aww, not quite, Wiku — but you're close! Keep going, baby! 💪",
+  "That's okay, love! Mistakes help us learn. 🌸",
+  "Almost there, baby! Don't give up — you've got this. 💕",
+  "No worries, Wiku! Every try makes you stronger. 🌱",
+  "It's alright, my love — take a breath and try the next one! 🤍",
+  "Not this time, baby, but I still believe in you! 🌷",
+  "So close, Wiku! Review this one and you'll get it next time. ✨"
+];
+function randMsg(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+/* ============ HELPERS ============ */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function pick(bank, n){ return shuffle(bank).slice(0, n); }
+function escapeHtml(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+function escapeAttr(s){
+  return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+/* ============ QUESTION BANKS ============ */
+const enumBank = [
+  {prompt:"Enumerate the four (4) methods of ethics discussed in the lecture.",
+   answers:["Physical and Biological method","Historical or Genetic method","Psychological method","Metaphysical method"]},
+  {prompt:"Give the six (6) criteria often used to distinguish a profession from ordinary work.",
+   answers:["Academic education","Importance of services provided","Professional degree","Professional association","Autonomy","Ethical code or code of conduct"]},
+  {prompt:"Enumerate the three (3) types of professional relations that generate moral norms and duties.",
+   answers:["Relations to people dependent on professional work and service","Relations to workmates","Relations to employers"]},
+  {prompt:"Give the six (6) kinds of conscience.",
+   answers:["Correct or True Conscience","Erroneous or False Conscience","Certain Conscience","Doubtful Conscience","Scrupulous Conscience","Lax Conscience"]},
+  {prompt:"Enumerate Kohlberg's three (3) levels of moral development.",
+   answers:["Pre-Conventional Level","Conventional Level","Post-Conventional Level"]},
+  {prompt:"Give the six (6) stages of moral development under Kohlberg's theory.",
+   answers:["Punishment-Avoidance and Obedience","Exchange of Favors","Good Boy or Good Girl","Law and Order","Social Contract","Universal Ethical Principle"]},
+  {prompt:"Enumerate the five (5) characteristics of moral standards.",
+   answers:["Welfare of beings","Relies on sound reasoning","Overriding hegemony","Impartial, fair and just","Emotions and vocabulary"]},
+  {prompt:"Enumerate the five (5) characteristics of non-moral standards.",
+   answers:["Welfare of non-beings","Relies on authority or law","Religion, tradition","Limits hegemony","Self interest"]},
+  {prompt:"Give the five (5) claims made by cultural relativists, as stated by Rachels (2007).",
+   answers:["Different societies have different moral codes","The moral code of a society determines what is right within that society","There is no objective standard to judge one society's code as better than another's","The moral code of our own society has no special status","It is mere arrogance for us to judge the conduct of other people"]},
+  {prompt:"Enumerate the four (4) theories on rightness and obligation cited by Rachels (2007).",
+   answers:["Ethical Egoism","Utilitarianism","Kant's Theory or Categorical Imperative","Social Contract Theory"]},
+  {prompt:"Give seven (7) elements of Philippine culture and moral life according to Moga (2004).",
+   answers:["Religion","Hospitality","Pakikisama","Authority figures","Saving face","Family","Cleanliness"]},
+  {prompt:"Enumerate the two (2) classifications of acts discussed in 'Human Act vs. Acts of Human.'",
+   answers:["Human Acts","Acts of Human"]},
+  {prompt:"Give the three (3) purposes or functions of a professional ethical code mentioned in the lecture.",
+   answers:["Guide professionals facing difficult moral decisions","Serve as a reference for professionals who want to act morally","Improve the professional ethical standard"]},
+  {prompt:"Enumerate any four (4) sub-disciplines of applied ethics mentioned in the lecture.",
+   answers:["Medical ethics","Animal ethics","Environmental ethics","Business ethics","Research ethics","Technology and ethics","ICT ethics","Politics and ethics"],
+   blanks:4}
+];
+
+const matchBank = [
+  {term:"Ethos (Greek)", def:"Root word of \"ethics,\" meaning customs or habits"},
+  {term:"Mores (Latin)", def:"Root word of \"morality,\" meaning customs or habits"},
+  {term:"Applied Ethics", def:"Reflecting on moral dilemmas and problems in specific social contexts such as business, medicine, or politics"},
+  {term:"Professional Ethics", def:"The ethics of professional life, or the ethics of work"},
+  {term:"Virtue (MacIntyre)", def:"An acquired human quality whose possession and exercise helps achieve goods internal to a practice"},
+  {term:"Practice (MacIntyre)", def:"A coherent, complex form of socially established cooperative human activity"},
+  {term:"Freedom", def:"The power or right to act, speak, or think as one wants without hindrance or restraint"},
+  {term:"Free Will", def:"The idea that we are able to choose how we act"},
+  {term:"Human Acts", def:"Actions done intentionally, freely, and deliberately by a person"},
+  {term:"Acts of Human", def:"Natural, involuntary actions performed without the intervention of intellect or free will"},
+  {term:"Culture", def:"Patterns of learned and shared behavior and beliefs of a particular social or ethnic group"},
+  {term:"Cultural Relativism", def:"Understanding a culture on its own terms without judging it by another culture's standards"},
+  {term:"Ethnocentrism", def:"Viewing one's own culture as superior to others"},
+  {term:"Conscience", def:"The proximate norm of morality; the inner voice that judges actions as good or evil"},
+  {term:"Correct or True Conscience", def:"Conscience that judges rightly, in accordance with true moral standards"},
+  {term:"Erroneous or False Conscience", def:"Conscience that mistakenly approves what is wrong or condemns what is right"},
+  {term:"Scrupulous Conscience", def:"Conscience that sees sin or evil where there is none, causing excessive worry"},
+  {term:"Lax Conscience", def:"Conscience that is careless and does not readily see evil in one's actions"},
+  {term:"Moral Standards", def:"Norms about the kinds of actions believed to be morally right or wrong"},
+  {term:"Non-Moral Standards", def:"Standards that guide behavior but are not linked to moral considerations, such as etiquette or grammar"},
+  {term:"Ethical Egoism", def:"The view that each person ought to do whatever will best promote his or her own interests"},
+  {term:"Utilitarianism", def:"The view that we ought to do whatever will promote the greatest happiness for the greatest number"},
+  {term:"Kant's Theory", def:"The view that we should follow rules we could consistently will to be universal laws, or the categorical imperative"},
+  {term:"Social Contract Theory", def:"The view that the right thing to do is to follow rules that rational, self-interested people would agree to for mutual benefit"},
+  {term:"Hippocratic Oath", def:"The oldest known professional code of ethics, dating from the 4th century B.C., binding doctors to do no harm"}
+];
+
+const ethicsMCBank = [
+  {q:"The word \"ethics\" is derived from which Greek word?", options:["Mores","Ethos","Logos","Pathos"], correct:"Ethos"},
+  {q:"Ethics is also often called:", options:["Political science","Natural science","Moral philosophy","Social science"], correct:"Moral philosophy"},
+  {q:"According to the lecture, ethics is described as a ___ science that determines norms, ideals, or standards of conduct.", options:["Descriptive","Normative","Empirical only","Positive"], correct:"Normative"},
+  {q:"Which of the following is NOT one of the four methods of ethics mentioned in the lecture?", options:["Physical and biological method","Historical or genetic method","Psychological method","Statistical method"], correct:"Statistical method"},
+  {q:"Who defined \"applied ethics\" as the application of ethics to special arenas of human activity such as business, politics, and medicine?", options:["Tom Beauchamp","James Childress","Alasdair MacIntyre","Immanuel Kant"], correct:"James Childress"},
+  {q:"Which criterion of a profession is described as particularly important from an ethical point of view because it concerns the ability to make independent decisions?", options:["Academic education","Professional degree","Autonomy","Professional association"], correct:"Autonomy"},
+  {q:"According to MacIntyre, goods that are constitutive of a practice are called:", options:["External goods","Internal goods","Moral goods","Common goods"], correct:"Internal goods"},
+  {q:"The oldest known professional code of ethics, dating from the 4th century B.C., is the:", options:["Geneva Convention","Hippocratic Oath","Magna Carta","Ten Commandments"], correct:"Hippocratic Oath"},
+  {q:"Who developed the theory of virtue ethics referenced in the lecture, using the concepts of \"practice\" and \"internal goods\"?", options:["Aristotle","Immanuel Kant","Alasdair MacIntyre","James Rachels"], correct:"Alasdair MacIntyre"},
+  {q:"According to Immanuel Kant, we can make sense of moral appraisal and responsibility only by thinking about:", options:["Culture","Human freedom","Religion","Law"], correct:"Human freedom"},
+  {q:"Which type of act is described as done intentionally, freely, and deliberately, and is subject to morality?", options:["Acts of Human","Human Acts","Instinctive acts","Reflex acts"], correct:"Human Acts"},
+  {q:"Jumping into a river to save a drowning person WITHOUT first considering one's ability to swim is an example of:", options:["Human Act","Acts of Human","Free Will","Moral Standard"], correct:"Acts of Human"},
+  {q:"Cultural relativism is the belief that:", options:["One culture is superior to all others","No culture is superior to another when judged by its own standards","Morality is fixed and universal","Ethics has no relation to culture"], correct:"No culture is superior to another when judged by its own standards"},
+  {q:"Which term describes viewing one's own culture as superior, often leading to prejudice against other cultures?", options:["Cultural relativism","Ethnocentrism","Moral absolutism","Universalism"], correct:"Ethnocentrism"},
+  {q:"According to Rachels, the Callatians and the Eskimos are used as examples to illustrate:", options:["Ethical egoism","Differing cultural moral codes","Kant's categorical imperative","Kohlberg's stages"], correct:"Differing cultural moral codes"},
+  {q:"Which Filipino value, according to Moga (2004), refers to smooth interpersonal relationships or getting along with others?", options:["Hiya","Pakikisama","Utang na loob","Bahala na"], correct:"Pakikisama"},
+  {q:"Whose theory of moral development is built upon Jean Piaget's cognitive development theory?", options:["Sigmund Freud","Lawrence Kohlberg","Jean-Paul Sartre","James Rachels"], correct:"Lawrence Kohlberg"},
+  {q:"In Kohlberg's Pre-Conventional Level, Stage 1 is known as:", options:["Good Boy/Good Girl","Law and Order","Punishment-Avoidance and Obedience","Social Contract"], correct:"Punishment-Avoidance and Obedience"},
+  {q:"Kohlberg's Stage 6, the highest stage, is called:", options:["Law and Order","Social Contract","Universal Ethical Principle","Exchange of Favors"], correct:"Universal Ethical Principle"},
+  {q:"According to Agapay (1991), conscience is described as the:", options:["Ultimate norm of law","Proximate norm of morality","Absolute standard of ethics","Final judge of culture"], correct:"Proximate norm of morality"},
+  {q:"The word \"conscience\" comes from the Latin word \"conscientia,\" which means:", options:["Inner light","Trial of oneself","Moral compass","Sacred duty"], correct:"Trial of oneself"},
+  {q:"A conscience that habitually sees sin or evil where there is none is called:", options:["Lax Conscience","Scrupulous Conscience","Doubtful Conscience","Erroneous Conscience"], correct:"Scrupulous Conscience"},
+  {q:"Which of the following is an example of a NON-moral standard?", options:["Honesty","Justice","Table manners or etiquette","Respect for human life"], correct:"Table manners or etiquette"},
+  {q:"Moral standards, unlike non-moral standards, are said to:", options:["Be established by authoritative bodies","Take precedence over other considerations, especially self-interest","Change according to fashion","Apply only within one profession"], correct:"Take precedence over other considerations, especially self-interest"},
+  {q:"Which theory states that the right thing to do is whatever will promote the greatest happiness for the greatest number?", options:["Ethical Egoism","Utilitarianism","Social Contract Theory","Kant's Theory"], correct:"Utilitarianism"}
+];
+
+const bizMCBank = [
+  {q:"What is business ethics, as defined in the lecture, in relation to how businesses operate?", options:["A legal requirement imposed by government","The set of moral rules that govern how businesses operate, decisions are made, and people are treated in business","A marketing strategy for public relations","A set of accounting standards"], correct:"The set of moral rules that govern how businesses operate, decisions are made, and people are treated in business"},
+  {q:"Business ethics is also known as:", options:["Corporate ethics","Civic ethics","Personal ethics","Political ethics"], correct:"Corporate ethics"},
+  {q:"According to T.M. Garrett's definition, business ethics is the study of the moral rightness or wrongness of acts involved in:", options:["Hiring and firing employees","Production, distribution, and exchange of economic goods and services","Advertising only","Stock market trading"], correct:"Production, distribution, and exchange of economic goods and services"},
+  {q:"Which of the following is NOT one of the five essentials of workplace ethics discussed in the lecture?", options:["Trustworthiness","Respect","Creativity","Caring"], correct:"Creativity"},
+  {q:"Which of the following belongs under \"Trustworthiness\"?", options:["Courtesy","Integrity","Empathy","Tolerance"], correct:"Integrity"},
+  {q:"Which of the following belongs under \"Respect\"?", options:["Promise-keeping","Loyalty","Courtesy and Dignity","Honesty"], correct:"Courtesy and Dignity"},
+  {q:"\"Don't make excuses, accept responsibility for decisions, fulfill all obligations, and don't over-promise\" describes which essential?", options:["Fairness","Responsibility","Caring","Respect"], correct:"Responsibility"},
+  {q:"\"Listen and make decisions based on careful and appropriate consideration\" describes which essential?", options:["Fairness","Trustworthiness","Caring","Responsibility"], correct:"Fairness"},
+  {q:"Compassion, kindness, mercy, forgiveness, empathy, and gratitude are all part of:", options:["Respect","Caring","Fairness","Trustworthiness"], correct:"Caring"},
+  {q:"\"Everybody does it\" is an example of a/an:", options:["Ethical principle","Unethical excuse","Company policy","Moral standard"], correct:"Unethical excuse"},
+  {q:"Which of the following is also considered an unethical excuse mentioned in the lecture?", options:["\"I will take responsibility\"","\"Nobody is going to notice\"","\"Let's fix this together\"","\"This is part of my job\""], correct:"\"Nobody is going to notice\""},
+  {q:"Which of the following is listed as a benefit of good ethics in the workplace?", options:["Increased office gossip","Loyalty and good office morale","More unrealistic expectations","Higher employee turnover"], correct:"Loyalty and good office morale"},
+  {q:"Which of the following is an example of GOOD workplace ethics?", options:["Gossiping","Blowing the whistle","Ignoring problems","Abusing confidentiality agreements"], correct:"Blowing the whistle"},
+  {q:"Which of the following is an example of POOR workplace ethics?", options:["Being punctual","Taking pride in your work","Bribes","Setting the example"], correct:"Bribes"},
+  {q:"Which of the following is an example of GOOD workplace ethics from the Do's and Don'ts list?", options:["Unpunctual or poor attendance","Being accountable for your actions","Blackmail","Lack of communication"], correct:"Being accountable for your actions"},
+  {q:"Which of the following is an example of POOR workplace ethics from the Do's and Don'ts list?", options:["Taking initiative","Thinking critically to solve problems","Making decisions for personal interest","Being punctual"], correct:"Making decisions for personal interest"},
+  {q:"Organizational culture is defined in the lecture as:", options:["The financial performance of a company","The characteristic set of values and ways of behaving that employees in an organization share","The company's marketing brand","The physical office layout"], correct:"The characteristic set of values and ways of behaving that employees in an organization share"},
+  {q:"According to the lecture, ethics apply to relationships between which two types of individuals in a business?", options:["Shareholders and government only","Internal customers and external customers","Competitors only","Suppliers only"], correct:"Internal customers and external customers"},
+  {q:"\"Internal customers\" in a business context refer to:", options:["Members of the public who buy products","Management/supervisors and colleagues/employees","Government regulators","Investors only"], correct:"Management/supervisors and colleagues/employees"},
+  {q:"Which of the following is listed as a way to encourage good ethics in the workplace?", options:["Inconsistent communication","Fair consequences and fair treatment","Ignoring poor performance","Avoiding feedback"], correct:"Fair consequences and fair treatment"},
+  {q:"According to the lecture, what bothers people most in the workplace, related to appearance?", options:["Being too formal","Wearing clothing that is dirty, too casual, or distracting","Dressing professionally","Wearing a uniform"], correct:"Wearing clothing that is dirty, too casual, or distracting"},
+  {q:"Which behavior is listed among things that \"bother people the most\" in a workplace?", options:["Returning borrowed items promptly","Habitually arriving late at meetings","Speaking softly on the phone","Maintaining personal hygiene"], correct:"Habitually arriving late at meetings"},
+  {q:"Which of the following factors necessitates ethical behavior in business, according to the lecture?", options:["Businesses operate independently of society's values","Growing public awareness demanding businesses shoulder social responsibility","Ethics have no impact on market share","Legislation has no connection to unethical practices"], correct:"Growing public awareness demanding businesses shoulder social responsibility"},
+  {q:"According to the lecture, unethical practices in business will eventually lead to:", options:["Increased customer loyalty","Government control through legislation","Higher stock prices","Better public image"], correct:"Government control through legislation"},
+  {q:"The lecture states that regarding ethical behavior in business, \"prevention is better than ___\":", options:["Punishment","Cure","Profit","Regulation"], correct:"Cure"},
+  {q:"In the relationship between business ethics and business values, which is described as more concerned with issues of morality and integrity?", options:["Business values","Business ethics","Corporate branding","Business strategy"], correct:"Business ethics"},
+  {q:"In the relationship between business ethics and business values, which is described as more focused on company ideals and conduct, and more obligatory on employees?", options:["Business ethics","Business values","Personal ethics","Professional codes"], correct:"Business values"},
+  {q:"Why are business values considered more obligatory on employees than business ethics, according to the lecture?", options:["Because business values are legally binding contracts","Because ethics are more inborn while business values are more defined and incorporated into corporate objectives","Because business values are optional guidelines","Because ethics apply only to management"], correct:"Because ethics are more inborn while business values are more defined and incorporated into corporate objectives"},
+  {q:"Ethical business communication is described in the lecture as significant on how many main fronts?", options:["Two","Three","Four","Five"], correct:"Three"},
+  {q:"The three main fronts of ethical business communication are business-to-business, business-to-employees, and:", options:["Business-to-competitors","Business-to-public","Business-to-government","Business-to-shareholders only"], correct:"Business-to-public"},
+  {q:"What is the primary function of ethical business communication, according to the lecture?", options:["To persuade customers to buy more products","To send and receive messages in a neutral, non-offensive manner","To increase advertising revenue","To reduce the number of employees"], correct:"To send and receive messages in a neutral, non-offensive manner"},
+  {q:"According to the lecture, unethical communication in business does NOT have to be obvious or overt because:", options:["It is always intentional","It is based on perception","It only happens in writing","It is regulated by law"], correct:"It is based on perception"},
+  {q:"What is described as a common misconception about unethical communication in business?", options:["That it always involves lying","That most unethical communication is obvious and overt","That it never affects employees","That it is always verbal"], correct:"That most unethical communication is obvious and overt"},
+  {q:"What is the purpose of ethical communication in business, according to the lecture?", options:["To maximize short-term profit","To protect, respect, and maintain a good public image","To eliminate competition","To reduce employee benefits"], correct:"To protect, respect, and maintain a good public image"},
+  {q:"When communication does not adhere to ethical standards, the lecture states the consequences can include:", options:["Increased profits and happier employees","Unhappy employees, poor public image, and decreased bottom line","Better customer service","Stronger corporate culture"], correct:"Unhappy employees, poor public image, and decreased bottom line"},
+  {q:"Ethical, effective communication skills in business are said to strengthen:", options:["Government regulations","Corporate culture","Stock market volatility","Personal relationships only"], correct:"Corporate culture"},
+  {q:"Business communication is defined in the lecture as occurring:", options:["Only in written form","Any time a message is given or received, verbal or nonverbal, involving a business","Only during formal meetings","Only between employees"], correct:"Any time a message is given or received, verbal or nonverbal, involving a business"},
+  {q:"Which of the following best fits the definition of \"trustworthiness\" as an essential of workplace ethics?", options:["Being polite to coworkers only","Integrity, honesty, promise-keeping, and loyalty","Following company dress code","Meeting sales quotas"], correct:"Integrity, honesty, promise-keeping, and loyalty"},
+  {q:"Which value under \"Respect\" involves valuing differences that coworkers bring into the workplace?", options:["Courtesy","Tolerance","Dignity","Politeness"], correct:"Tolerance"},
+  {q:"According to the lecture, \"Life is full of choices — what you do and don't do matters,\" and \"choosing not to choose is a choice\" relates most closely to which essential?", options:["Caring","Responsibility","Fairness","Trustworthiness"], correct:"Responsibility"},
+  {q:"Which of the following would be considered \"poor workplace ethics\" concerning confidentiality?", options:["Maintaining confidentiality agreements","Abusing confidentiality agreements","Signing NDAs","Reporting breaches"], correct:"Abusing confidentiality agreements"},
+  {q:"What should employees do when facing a problem or ethical breach at work, according to \"Good Workplace Ethics\"?", options:["Ignore it and hope it resolves itself","Make an immediate attempt to correct the issue","Blame someone else","Wait for the next appraisal cycle"], correct:"Make an immediate attempt to correct the issue"},
+  {q:"Which of these reflects the \"Responsibility\" essential's guidance on promises?", options:["Over-promise to please clients","Do NOT over-promise","Promise as much as possible","Avoid making any commitments"], correct:"Do NOT over-promise"},
+  {q:"Which unethical excuse relates to compensation dissatisfaction, according to the lecture?", options:["\"It's not part of my job description\"","\"I don't get paid enough\"","\"Nobody is going to notice\"","\"Everybody does it\""], correct:"\"I don't get paid enough\""},
+  {q:"\"Unrealistic expectations of what the job entails\" is classified in the lecture as:", options:["A benefit of good ethics","An unethical excuse","A workplace value","A form of trustworthiness"], correct:"An unethical excuse"},
+  {q:"Which of the following is listed among the benefits of good ethics related to career growth?", options:["Growth and expansion","Increased complaints","Higher turnover","Reduced recognition"], correct:"Growth and expansion"},
+  {q:"According to the lecture, \"recognition\" appears as both a benefit of good ethics and:", options:["A way to encourage good ethics in the workplace","A form of unethical excuse","A type of non-moral standard","A stage of moral development"], correct:"A way to encourage good ethics in the workplace"},
+  {q:"Fair consequences and fair treatment are both listed under which lecture heading?", options:["Benefits of Good Ethics","How to Encourage Good Ethics in the Workplace","Unethical Excuses","What Bothers You the Most"], correct:"How to Encourage Good Ethics in the Workplace"},
+  {q:"According to the lecture's objectives, understanding workplace ethics includes identifying how ethics affect organizational culture, teamwork, productivity, and:", options:["Stock price","Public image","Tax obligations","Advertising budget"], correct:"Public image"},
+  {q:"Which best describes \"external customers\" as used in the lecture's discussion of relationships and ethics?", options:["Colleagues and employees","Management and supervisors","Parties outside the organization who interact with the business","The company's own departments"], correct:"Parties outside the organization who interact with the business"},
+  {q:"Which of the following is an example of good personal conduct that avoids \"bothering\" coworkers, based on the lecture's list?", options:["Leaving trash in shared work spaces","Maintaining good personal hygiene","Flirting with coworkers","Speaking loudly on the telephone"], correct:"Maintaining good personal hygiene"},
+  {q:"Gossiping is classified in the lecture as:", options:["A benefit of good ethics","Good workplace ethics","Poor workplace ethics","A form of fairness"], correct:"Poor workplace ethics"},
+  {q:"Which of these is part of the \"Do's\" in the Do's and Don'ts of workplace ethics?", options:["Ignoring procedures and policies","Staying productive","Making decisions for personal interest","Lack of communication"], correct:"Staying productive"},
+  {q:"Which of these is part of the \"Don'ts\" in the Do's and Don'ts of workplace ethics?", options:["Taking pride in your work","Setting the example","Ignoring procedures and policies","Blowing the whistle"], correct:"Ignoring procedures and policies"},
+  {q:"Constructive feedback and having plans of action are both examples of:", options:["Unethical excuses","Ways to encourage good ethics in the workplace","Poor workplace ethics","Non-moral standards"], correct:"Ways to encourage good ethics in the workplace"},
+  {q:"Which statement best reflects the lecture's view on ethical business communication?", options:["Communication is successful only when both sender and receiver understand the same information","Communication is only about the sender's intent","Nonverbal communication does not count as business communication","Communication ethics apply only to external audiences"], correct:"Communication is successful only when both sender and receiver understand the same information"},
+  {q:"In the definition of business ethics, which term is used interchangeably with \"business ethics\" in the lecture?", options:["Civic ethics","Corporate ethics","Consumer ethics","Political ethics"], correct:"Corporate ethics"},
+  {q:"Business ethics, as a form of applied or professional ethics, examines:", options:["Only legal compliance","Ethical principles and moral or ethical problems in a business environment","Tax codes exclusively","Only shareholder profits"], correct:"Ethical principles and moral or ethical problems in a business environment"},
+  {q:"According to the lecture, business ethics is relevant to:", options:["Only top executives","Individuals and entire organizations","Only external stakeholders","Only government regulators"], correct:"Individuals and entire organizations"},
+  {q:"Every businessman, according to the lecture, must assume ethical obligations:", options:["Only after the business becomes profitable","At the very inception of entering the business","Only when facing a lawsuit","Only during audits"], correct:"At the very inception of entering the business"}
+];
+
+/* ============ EXAM STATE ============ */
+let examState = {
+  ethics: { enum: [], match: { items: [], options: [] }, mc: [] },
+  biz: { mc: [] }
+};
+
+function buildEnum(n){
+  return pick(enumBank, n).map(item => ({
+    prompt: item.prompt,
+    answers: item.answers,
+    blanks: item.blanks || item.answers.length,
+    values: Array(item.blanks || item.answers.length).fill(""),
+    status: "unanswered",
+    msg: ""
+  }));
+}
+function buildMatch(n){
+  const pairs = pick(matchBank, n);
+  const options = shuffle(pairs.map(p => p.def));
+  return {
+    items: pairs.map(p => ({ term: p.term, correct: p.def, selected: "", status: "unanswered", msg: "" })),
+    options: options
+  };
+}
+function buildMC(bank, n){
+  return pick(bank, n).map(item => ({
+    q: item.q,
+    options: shuffle(item.options),
+    correct: item.correct,
+    selected: null,
+    status: "unanswered",
+    msg: ""
+  }));
+}
+
+function newEthicsExam(){
+  examState.ethics.enum = buildEnum(10);
+  examState.ethics.match = buildMatch(20);
+  examState.ethics.mc = buildMC(ethicsMCBank, 20);
+  renderEthics();
+}
+function newBizExam(){
+  examState.biz.mc = buildMC(bizMCBank, 50);
+  renderBiz();
+}
+
+function retakeExam(section){
+  if(section === "ethics"){
+    examState.ethics.enum.forEach(q => { q.values = Array(q.blanks).fill(""); q.status = "unanswered"; q.msg=""; });
+    examState.ethics.match.items.forEach(it => { it.selected = ""; it.status = "unanswered"; it.msg=""; });
+    examState.ethics.mc.forEach(q => { q.selected = null; q.status = "unanswered"; q.msg=""; });
+    renderEthics();
+  } else {
+    examState.biz.mc.forEach(q => { q.selected = null; q.status = "unanswered"; q.msg=""; });
+    renderBiz();
+  }
+}
+
+function shuffleExam(section){
+  if(section === "ethics"){
+    examState.ethics.enum = shuffle(examState.ethics.enum).map(q => ({...q, values: Array(q.blanks).fill(""), status:"unanswered", msg:""}));
+    const items = shuffle(examState.ethics.match.items).map(it => ({ term: it.term, correct: it.correct, selected:"", status:"unanswered", msg:"" }));
+    const options = shuffle(items.map(it => it.correct));
+    examState.ethics.match = { items, options };
+    examState.ethics.mc = shuffle(examState.ethics.mc).map(q => ({...q, options: shuffle(q.options), selected:null, status:"unanswered", msg:""}));
+    renderEthics();
+  } else {
+    examState.biz.mc = shuffle(examState.biz.mc).map(q => ({...q, options: shuffle(q.options), selected:null, status:"unanswered", msg:""}));
+    renderBiz();
+  }
+}
+
+function generateNewExam(section){
+  if(section === "ethics") newEthicsExam(); else newBizExam();
+}
+
+/* ============ CHECK FUNCTIONS ============ */
+function normalize(s){
+  return String(s).toLowerCase().replace(/[^a-z0-9 ]/g,"").trim();
+}
+
+function checkEnum(idx){
+  const q = examState.ethics.enum[idx];
+  const container = document.getElementById("enum-" + idx);
+  const inputs = container.querySelectorAll(".blank-input");
+  q.values = Array.from(inputs).map(i => i.value.trim());
+
+  const correctPool = q.answers.map(a => normalize(a));
+  const used = new Array(correctPool.length).fill(false);
+  let matched = 0;
+  q.values.forEach(v => {
+    if(!v) return;
+    const nv = normalize(v);
+    if(!nv) return;
+    for(let i=0;i<correctPool.length;i++){
+      if(used[i]) continue;
+      if(correctPool[i] === nv || (nv.length > 3 && (correctPool[i].includes(nv) || nv.includes(correctPool[i])))){
+        used[i] = true; matched++; break;
+      }
+    }
+  });
+  q.status = matched >= q.blanks ? "correct" : "incorrect";
+  q.msg = q.status === "correct" ? randMsg(correctMsgs) : randMsg(incorrectMsgs);
+  renderEthics();
+}
+
+function checkMatch(idx){
+  const it = examState.ethics.match.items[idx];
+  const el = document.getElementById("match-select-" + idx);
+  it.selected = el.value;
+  if(!it.selected){ it.status = "unanswered"; renderEthics(); return; }
+  it.status = it.selected === it.correct ? "correct" : "incorrect";
+  it.msg = it.status === "correct" ? randMsg(correctMsgs) : randMsg(incorrectMsgs);
+  renderEthics();
+}
+
+function checkMC(section, idx){
+  const q = section === "ethics" ? examState.ethics.mc[idx] : examState.biz.mc[idx];
+  const name = section + "-mc-" + idx;
+  const sel = document.querySelector('input[name="' + name + '"]:checked');
+  if(!sel) return;
+  q.selected = sel.value;
+  q.status = q.selected === q.correct ? "correct" : "incorrect";
+  q.msg = q.status === "correct" ? randMsg(correctMsgs) : randMsg(incorrectMsgs);
+  if(section === "ethics") renderEthics(); else renderBiz();
+}
+
+/* ============ RENDER FUNCTIONS ============ */
+function buildSelect(options, selected, idx){
+  let html = '<select class="match-select" id="match-select-' + idx + '" onchange="checkMatch(' + idx + ')">';
+  html += '<option value="">-- Select the correct definition --</option>';
+  options.forEach(o => {
+    html += '<option value="' + escapeAttr(o) + '" ' + (o === selected ? "selected" : "") + '>' + escapeHtml(o) + '</option>';
+  });
+  html += '</select>';
+  return html;
+}
+
+function feedbackHtml(status, msg, correctLabel){
+  if(status === "unanswered") return "";
+  let extra = status === "incorrect" ? '<div class="correct-answer">' + correctLabel + '</div>' : "";
+  return '<div class="feedback ' + status + '">' + msg + extra + '</div>';
+}
+
+function renderEthics(){
+  // Enumeration
+  let enumHtml = examState.ethics.enum.map((q, idx) => {
+    let blanksHtml = "";
+    for(let i=0;i<q.blanks;i++){
+      blanksHtml += '<input type="text" class="blank-input" placeholder="Answer ' + (i+1) + '" value="' + escapeAttr(q.values[i] || "") + '">';
+    }
+    const fb = feedbackHtml(q.status, q.msg, "Correct answers: " + q.answers.join("; "));
+    return '<div class="question ' + q.status + '" id="enum-' + idx + '">' +
+      '<div class="qtext"><span class="qnum">' + (idx+1) + '.</span> ' + escapeHtml(q.prompt) + '</div>' +
+      '<div class="blanks">' + blanksHtml + '</div>' +
+      '<button class="check-btn" onclick="checkEnum(' + idx + ')">Check Answer</button>' +
+      fb +
+      '</div>';
+  }).join("");
+  document.getElementById("ethics-enum-list").innerHTML = enumHtml;
+
+  // Matching
+  const matchOptions = examState.ethics.match.options;
+  let matchHtml = examState.ethics.match.items.map((it, idx) => {
+    const fb = feedbackHtml(it.status, it.msg, "Correct match: " + it.correct);
+    return '<div class="question ' + it.status + '">' +
+      '<div class="qtext"><span class="qnum">' + (11+idx) + '.</span> ' + escapeHtml(it.term) + '</div>' +
+      buildSelect(matchOptions, it.selected, idx) +
+      fb +
+      '</div>';
+  }).join("");
+  document.getElementById("ethics-match-list").innerHTML = matchHtml;
+
+  // Multiple choice
+  let mcHtml = examState.ethics.mc.map((q, idx) => {
+    let optsHtml = q.options.map(opt => {
+      const checked = q.selected === opt ? "checked" : "";
+      return '<label class="option"><input type="radio" name="ethics-mc-' + idx + '" value="' + escapeAttr(opt) + '" ' + checked + ' onchange="checkMC(\'ethics\',' + idx + ')"> ' + escapeHtml(opt) + '</label>';
+    }).join("");
+    const fb = feedbackHtml(q.status, q.msg, "Correct answer: " + q.correct);
+    return '<div class="question ' + q.status + '">' +
+      '<div class="qtext"><span class="qnum">' + (31+idx) + '.</span> ' + escapeHtml(q.q) + '</div>' +
+      '<div class="options">' + optsHtml + '</div>' +
+      fb +
+      '</div>';
+  }).join("");
+  document.getElementById("ethics-mc-list").innerHTML = mcHtml;
+
+  updateScore("ethics");
+}
+
+function renderBiz(){
+  let mcHtml = examState.biz.mc.map((q, idx) => {
+    let optsHtml = q.options.map(opt => {
+      const checked = q.selected === opt ? "checked" : "";
+      return '<label class="option"><input type="radio" name="biz-mc-' + idx + '" value="' + escapeAttr(opt) + '" ' + checked + ' onchange="checkMC(\'biz\',' + idx + ')"> ' + escapeHtml(opt) + '</label>';
+    }).join("");
+    const fb = feedbackHtml(q.status, q.msg, "Correct answer: " + q.correct);
+    return '<div class="question ' + q.status + '">' +
+      '<div class="qtext"><span class="qnum">' + (idx+1) + '.</span> ' + escapeHtml(q.q) + '</div>' +
+      '<div class="options">' + optsHtml + '</div>' +
+      fb +
+      '</div>';
+  }).join("");
+  document.getElementById("biz-mc-list").innerHTML = mcHtml;
+
+  updateScore("biz");
+}
+
+function updateScore(section){
+  let all;
+  if(section === "ethics"){
+    all = [...examState.ethics.enum, ...examState.ethics.match.items, ...examState.ethics.mc];
+  } else {
+    all = examState.biz.mc;
+  }
+  const total = all.length;
+  const answered = all.filter(q => q.status !== "unanswered").length;
+  const correct = all.filter(q => q.status === "correct").length;
+
+  document.getElementById(section + "-score").textContent = correct;
+  document.getElementById(section + "-total").textContent = total;
+  document.getElementById(section + "-progress").textContent = answered;
+
+  const summaryEl = document.getElementById(section + "-summary");
+  if(answered === total && total > 0){
+    summaryEl.classList.remove("hidden");
+    summaryEl.innerHTML = buildSummary(correct, total);
+  } else {
+    summaryEl.classList.add("hidden");
+  }
+}
+
+function buildSummary(correct, total){
+  const pct = Math.round((correct/total)*100);
+  let msg;
+  if(pct >= 90) msg = "Outstanding, Wiku! 🏆 You totally mastered this — I'm so proud of you, my love!";
+  else if(pct >= 75) msg = "Great job, baby! 🌟 You really know your stuff!";
+  else if(pct >= 50) msg = "Good effort, Wiku! 💪 A little more review and you'll ace it next time!";
+  else msg = "It's okay, love! 💕 This is just practice — let's go over it again together, you've got this!";
+  return '<h3>Exam Complete! 🎓</h3><p>You scored ' + correct + ' out of ' + total + ' (' + pct + '%).</p><p>' + msg + '</p>';
+}
+
+/* ============ TABS ============ */
+document.querySelectorAll(".tab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    document.querySelectorAll(".exam-section").forEach(s => s.classList.remove("active"));
+    document.getElementById(btn.dataset.tab + "-section").classList.add("active");
+  });
+});
+
+/* ============ INIT ============ */
+newEthicsExam();
+newBizExam();
+</script>
+</body>
+</html>
